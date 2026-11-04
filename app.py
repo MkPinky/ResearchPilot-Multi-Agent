@@ -6,14 +6,15 @@ from datetime import datetime
 import streamlit as st
 from dotenv import load_dotenv
 
+
 # ==================================================
 # ENVIRONMENT CONFIGURATION
 # ==================================================
 
-# Load local .env file (PyCharm/local development)
+# Load local .env file
 load_dotenv()
 
-# Load Streamlit Cloud secrets (online deployment)
+# Load Streamlit Cloud secrets
 try:
     if "GROQ_API_KEY" in st.secrets:
         os.environ.setdefault(
@@ -28,7 +29,6 @@ try:
         )
 
 except Exception:
-    # Local execution may not have a Streamlit secrets file
     pass
 
 
@@ -44,11 +44,12 @@ st.set_page_config(
 
 
 # ==================================================
-# CUSTOM STYLING
+# CUSTOM CSS
 # ==================================================
 
 st.markdown("""
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
 
 html, body, [class*="css"] {
@@ -61,10 +62,12 @@ html, body, [class*="css"] {
 }
 
 .block-container {
-    max-width: 1120px;
+    max-width: 1200px;
     padding-top: 2rem;
     padding-bottom: 3rem;
 }
+
+/* HERO SECTION */
 
 .hero {
     background: linear-gradient(
@@ -73,64 +76,110 @@ html, body, [class*="css"] {
         #234a78 70%,
         #3868d8
     );
-    padding: 34px 38px;
+    padding: 38px 42px;
     border-radius: 22px;
     color: white;
-    margin-bottom: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 12px 30px rgba(20, 36, 59, 0.12);
 }
 
 .hero h1 {
-    font-family: Manrope, sans-serif;
-    color: white;
-    font-size: 2.35rem;
-    letter-spacing: -.04em;
+    font-family: 'Manrope', sans-serif;
+    color: #ffffff;
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
     margin: 0;
+    padding: 0;
 }
 
 .hero p {
     color: #dbe6f8;
     max-width: 760px;
-    margin: 10px 0 0;
-    line-height: 1.6;
+    font-size: 1rem;
+    margin-top: 12px;
+    line-height: 1.7;
 }
 
 .eyebrow {
     color: #9db8ff;
-    font-size: .72rem;
-    letter-spacing: .16em;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
     font-weight: 800;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
+/* INFORMATION PANEL */
+
 .panel {
-    background: white;
+    background: #ffffff;
     border: 1px solid #e5eaf2;
     border-radius: 16px;
-    padding: 18px 20px;
-    margin: 10px 0;
+    padding: 24px;
+    margin-top: 10px;
+    box-shadow: 0 5px 18px rgba(20, 36, 59, 0.04);
+}
+
+.panel-item {
+    margin-bottom: 20px;
+}
+
+.panel-item:last-child {
+    margin-bottom: 0;
+}
+
+.panel-title {
+    color: #234a78;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .small-muted {
     color: #718096;
-    font-size: .88rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
 }
 
-.agent-pill {
-    display: inline-block;
-    background: #edf2ff;
-    color: #315bd6;
-    border-radius: 999px;
-    padding: 6px 11px;
-    margin: 4px;
-    font-size: .78rem;
-    font-weight: 700;
+/* SIDEBAR */
+
+[data-testid="stSidebar"] {
+    background: #ffffff;
 }
+
+[data-testid="stSidebar"] h1 {
+    color: #14243b;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+}
+
+/* BUTTONS */
 
 div[data-testid="stButton"] button {
     border-radius: 11px;
     font-weight: 700;
+    min-height: 46px;
 }
+
+/* INPUTS */
+
+.stTextArea textarea {
+    border-radius: 12px;
+}
+
+.stSelectbox div[data-baseweb="select"] {
+    border-radius: 10px;
+}
+
+/* REPORT */
+
+.report-container {
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 16px;
+    padding: 24px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -141,17 +190,9 @@ div[data-testid="stButton"] button {
 
 st.markdown("""
 <div class="hero">
-    <div class="eyebrow">
-        CREWAI · MULTI-AGENT RESEARCH WORKSPACE
-    </div>
-
-    <h1>ResearchPilot</h1>
-
-    <p>
-        Discover research papers, compare findings,
-        identify research gaps and generate a structured
-        literature review with a collaborative team of AI agents.
-    </p>
+<div class="eyebrow">CREWAI · MULTI-AGENT RESEARCH WORKSPACE</div>
+<h1>ResearchPilot</h1>
+<p>Discover research papers, compare findings, identify research gaps and generate a structured literature review with a collaborative team of AI agents.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -162,22 +203,32 @@ st.markdown("""
 
 with st.sidebar:
 
-    st.title("ResearchPilot")
+    st.title("📚 ResearchPilot")
 
     st.caption("Multi-Agent Research Paper Assistant")
 
     st.markdown("---")
 
-    st.markdown("**Agent team**")
+    st.markdown("**🤖 Agent Team**")
 
-    for name in [
-        "Paper Discovery Agent",
-        "Literature Review Agent",
-        "Research Gap Agent",
-        "Paper Summarizer Agent",
-        "Report Writer Agent",
-    ]:
-        st.markdown(f"• {name}")
+    agents = [
+        "🔍 Paper Discovery Agent",
+        "📖 Literature Review Agent",
+        "🎯 Research Gap Agent",
+        "📝 Paper Summarizer Agent",
+        "📑 Report Writer Agent",
+    ]
+
+    for agent in agents:
+        st.markdown(agent)
+
+    st.markdown("---")
+
+    st.markdown("**Technology Stack**")
+
+    st.caption("Python · Streamlit")
+    st.caption("CrewAI · Groq")
+    st.caption("arXiv Research API")
 
     st.markdown("---")
 
@@ -189,7 +240,10 @@ with st.sidebar:
 # MAIN LAYOUT
 # ==================================================
 
-left, right = st.columns([1.35, 0.85], gap="large")
+left, right = st.columns(
+    [1.35, 0.85],
+    gap="large"
+)
 
 
 # ==================================================
@@ -198,12 +252,16 @@ left, right = st.columns([1.35, 0.85], gap="large")
 
 with left:
 
-    st.subheader("Start a research investigation")
+    st.subheader("Start a Research Investigation")
+
+    st.write(
+        "Enter your research topic and configure the paper discovery settings."
+    )
 
     topic = st.text_area(
-        "Research topic",
+        "Research Topic",
         placeholder="Example: Explainable AI for medical image diagnosis",
-        height=105,
+        height=110,
     )
 
     col1, col2 = st.columns(2)
@@ -229,51 +287,53 @@ with left:
             ],
         )
 
+    st.markdown("")
+
     run = st.button(
-        "🚀 Start multi-agent research",
+        "🚀 Start Multi-Agent Research",
         type="primary",
         use_container_width=True,
     )
 
 
 # ==================================================
-# AGENT INFORMATION
+# AGENT INFORMATION PANEL
 # ==================================================
 
 with right:
 
-    st.subheader("What the agents deliver")
+    st.subheader("What the Agents Deliver")
 
     st.markdown("""
-    <div class="panel">
+<div class="panel">
 
-        <b>01 · Discovery</b><br>
-        <span class="small-muted">
-        Find relevant papers and bibliographic details.
-        </span><br><br>
+<div class="panel-item">
+<div class="panel-title">01 · Discovery</div>
+<div class="small-muted">Find relevant research papers and bibliographic details.</div>
+</div>
 
-        <b>02 · Literature review</b><br>
-        <span class="small-muted">
-        Compare methods, datasets and findings.
-        </span><br><br>
+<div class="panel-item">
+<div class="panel-title">02 · Literature Review</div>
+<div class="small-muted">Compare research methods, datasets and findings.</div>
+</div>
 
-        <b>03 · Research gaps</b><br>
-        <span class="small-muted">
-        Highlight limitations and open questions.
-        </span><br><br>
+<div class="panel-item">
+<div class="panel-title">03 · Research Gaps</div>
+<div class="small-muted">Identify limitations and potential research opportunities.</div>
+</div>
 
-        <b>04 · Summaries</b><br>
-        <span class="small-muted">
-        Explain key papers in accessible language.
-        </span><br><br>
+<div class="panel-item">
+<div class="panel-title">04 · Paper Summaries</div>
+<div class="small-muted">Explain important research papers in accessible language.</div>
+</div>
 
-        <b>05 · Final report</b><br>
-        <span class="small-muted">
-        Create a structured research assistance report.
-        </span>
+<div class="panel-item">
+<div class="panel-title">05 · Final Report</div>
+<div class="small-muted">Generate a structured academic research assistance report.</div>
+</div>
 
-    </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
 
 # ==================================================
@@ -282,10 +342,10 @@ with right:
 
 if run:
 
-    # Validate topic
+    # Validate research topic
     if not topic.strip():
 
-        st.warning("Enter a research topic first.")
+        st.warning("Please enter a research topic first.")
 
         st.stop()
 
@@ -310,10 +370,10 @@ if run:
 
     st.markdown("---")
 
-    st.subheader("Research in progress")
+    st.subheader("Research in Progress")
 
     status = st.status(
-        "Preparing the CrewAI research team…",
+        "Preparing the CrewAI research team...",
         expanded=True,
     )
 
@@ -325,7 +385,7 @@ if run:
             "Connecting to arXiv and initializing five specialized agents."
         )
 
-        # Execute five-agent workflow
+        # Execute five-agent research workflow
         result = run_research(
             topic=topic.strip(),
             max_papers=max_papers,
@@ -338,51 +398,52 @@ if run:
             expanded=False,
         )
 
-        # Convert report into text
+        # Convert result into Markdown
         output_text = str(result)
 
         # Create output directory
         output_dir = Path("outputs")
+        output_dir.mkdir(exist_ok=True)
 
-        output_dir.mkdir(
-            exist_ok=True
-        )
-
-        # Generate timestamp
+        # Generate report filename
         stamp = datetime.now().strftime(
             "%Y%m%d_%H%M%S"
         )
 
-        # Save Markdown report
         report_path = (
             output_dir /
             f"research_report_{stamp}.md"
         )
 
+        # Save report
         report_path.write_text(
             output_text,
             encoding="utf-8",
         )
 
         st.success(
-            "All five agents have completed their tasks."
+            "All five agents have completed their tasks!"
         )
 
-        # Display final report
-        st.markdown("### Research report")
+        # Display final research report
+        st.markdown("---")
+        st.subheader("📑 Research Report")
 
-        st.markdown(output_text)
+        st.markdown(
+            output_text
+        )
 
-        # Download report
+        # Download Markdown report
         st.download_button(
-            "⬇️ Download research report (.md)",
+            label="⬇️ Download Research Report (.md)",
             data=output_text,
             file_name=report_path.name,
             mime="text/markdown",
+            use_container_width=True,
         )
 
         st.caption(
-            f"Saved locally to: {report_path}"
+            f"Report saved to: {report_path}"
         )
 
     except Exception as exc:
@@ -398,5 +459,24 @@ if run:
 
         st.info(
             "Check your Groq API key, internet connection "
-            "and terminal logs."
+            "and application logs."
         )
+
+
+# ==================================================
+# FOOTER
+# ==================================================
+
+st.markdown("---")
+
+st.markdown(
+    """
+    <div style="text-align:center; color:#718096; padding:12px;">
+        <b>ResearchPilot</b> · AI-Powered Multi-Agent Research Assistant<br>
+        <span style="font-size:12px;">
+        Built with Python, Streamlit, CrewAI and Groq
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
